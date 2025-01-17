@@ -12,7 +12,7 @@ import { BottomTabBarHeightContext } from './utils/BottomTabBarHeightContext';
 
 //@ts-ignore
 import type { ImageSource } from 'react-native/Libraries/Image/ImageSource';
-import TabViewAdapter from './TabViewAdapter';
+import NativeTabView from './TabViewNativeComponent';
 import useLatestCallback from 'use-latest-callback';
 import type { BaseRoute, NavigationState } from './types';
 
@@ -270,7 +270,7 @@ const TabView = <Route extends BaseRoute>({
 
   return (
     <BottomTabBarHeightContext.Provider value={tabBarHeight}>
-      <TabViewAdapter
+      <NativeTabView
         {...props}
         {...tabLabelStyle}
         style={styles.fullWidth}
@@ -299,9 +299,6 @@ const TabView = <Route extends BaseRoute>({
         {trimmedRoutes.map((route) => {
           if (getLazy({ route }) !== false && !loaded.includes(route.key)) {
             // Don't render a screen if we've never navigated to it
-            if (Platform.OS === 'android') {
-              return null;
-            }
             return (
               <View
                 key={route.key}
@@ -312,8 +309,6 @@ const TabView = <Route extends BaseRoute>({
           }
 
           const focused = route.key === focusedKey;
-          const opacity = focused ? 1 : 0;
-          const zIndex = focused ? 0 : -1;
 
           return (
             <View
@@ -326,7 +321,7 @@ const TabView = <Route extends BaseRoute>({
               }
               style={
                 Platform.OS === 'android'
-                  ? [StyleSheet.absoluteFill, { zIndex, opacity }]
+                  ? [measuredDimensions]
                   : [{ position: 'absolute' }, measuredDimensions]
               }
             >
@@ -337,7 +332,7 @@ const TabView = <Route extends BaseRoute>({
             </View>
           );
         })}
-      </TabViewAdapter>
+      </NativeTabView>
     </BottomTabBarHeightContext.Provider>
   );
 };

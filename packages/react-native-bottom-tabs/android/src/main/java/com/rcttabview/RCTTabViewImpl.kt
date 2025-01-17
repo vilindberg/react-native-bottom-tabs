@@ -1,12 +1,13 @@
 package com.rcttabview
 
 import android.content.res.ColorStateList
-import android.graphics.Color
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.facebook.react.bridge.ReactContext
+import android.view.View
+import android.view.ViewGroup
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.common.MapBuilder
+import com.rcttabview.events.OnNativeLayoutEvent
+import com.rcttabview.events.PageSelectedEvent
+import com.rcttabview.events.TabLongPressEvent
 
 data class TabInfo(
   val key: String,
@@ -25,26 +26,24 @@ class RCTTabViewImpl {
   fun setItems(view: ReactBottomNavigationView, items: ReadableArray) {
     val itemsArray = mutableListOf<TabInfo>()
     for (i in 0 until items.size()) {
-      items.getMap(i).let { item ->
-        itemsArray.add(
-          TabInfo(
-            key = item.getString("key") ?: "",
-            title = item.getString("title") ?: "",
-            badge = item.getString("badge") ?: "",
-            activeTintColor = if (item.hasKey("activeTintColor")) item.getInt("activeTintColor") else null,
-            hidden = if (item.hasKey("hidden")) item.getBoolean("hidden") else false,
-            testID = item.getString("testID")
+      items.getMap(i)?.let { item ->
+          itemsArray.add(
+            TabInfo(
+              key = item.getString("key") ?: "",
+              title = item.getString("title") ?: "",
+              badge = item.getString("badge") ?: "",
+              activeTintColor = if (item.hasKey("activeTintColor")) item.getInt("activeTintColor") else null,
+              hidden = if (item.hasKey("hidden")) item.getBoolean("hidden") else false,
+              testID = item.getString("testID")
+            )
           )
-        )
       }
     }
     view.updateItems(itemsArray)
   }
 
   fun setSelectedPage(view: ReactBottomNavigationView, key: String) {
-    view.items?.indexOfFirst { it.key == key }?.let {
-      view.selectedItemId = it
-    }
+    view.setSelectedItem(key)
   }
 
   fun setLabeled(view: ReactBottomNavigationView, flag: Boolean?) {
@@ -82,7 +81,7 @@ class RCTTabViewImpl {
   }
 
   fun setHapticFeedbackEnabled(view: ReactBottomNavigationView, enabled: Boolean) {
-   view.setHapticFeedback(enabled)
+   view.isHapticFeedbackEnabled = enabled
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any>? {
@@ -90,32 +89,37 @@ class RCTTabViewImpl {
       PageSelectedEvent.EVENT_NAME,
       MapBuilder.of("registrationName", "onPageSelected"),
       TabLongPressEvent.EVENT_NAME,
-      MapBuilder.of("registrationName", "onTabLongPress")
+      MapBuilder.of("registrationName", "onTabLongPress"),
+      OnNativeLayoutEvent.EVENT_NAME,
+      MapBuilder.of("registrationName", "onNativeLayout")
     )
+  }
+
+  fun getChildCount(parent: ReactBottomNavigationView): Int {
+    return parent.layoutHolder.childCount ?: 0
+  }
+
+  fun getChildAt(parent: ReactBottomNavigationView, index: Int): View? {
+    return parent.layoutHolder.getChildAt(index)
+  }
+
+  fun removeView(parent: ReactBottomNavigationView, view: View) {
+    parent.layoutHolder.removeView(view)
+  }
+
+  fun removeAllViews(parent: ReactBottomNavigationView) {
+    parent.layoutHolder.removeAllViews()
+  }
+
+  fun removeViewAt(parent: ReactBottomNavigationView, index: Int) {
+    parent.layoutHolder.removeViewAt(index)
+  }
+
+  fun needsCustomLayoutForChildren(): Boolean {
+    return true
   }
 
   companion object {
     const val NAME = "RNCTabView"
-
-    // Detect `react-native-edge-to-edge` (https://github.com/zoontek/react-native-edge-to-edge)
-    private val EDGE_TO_EDGE = try {
-      Class.forName("com.zoontek.rnedgetoedge.EdgeToEdgePackage")
-      true
-    } catch (exception: ClassNotFoundException) {
-      false
-    }
-
-    fun getNavigationBarInset(context: ReactContext): Int {
-      val window = context.currentActivity?.window
-
-      val isSystemBarTransparent = EDGE_TO_EDGE || window?.navigationBarColor == Color.TRANSPARENT
-
-      if (!isSystemBarTransparent) {
-        return 0
-      }
-
-      val windowInsets = ViewCompat.getRootWindowInsets(window?.decorView ?: return 0)
-      return windowInsets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
-    }
   }
 }

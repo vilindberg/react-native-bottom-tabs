@@ -1,22 +1,20 @@
 package com.rcttabview
 
-import android.view.View.MeasureSpec
-import com.facebook.react.bridge.ReadableArray
+import android.view.View
 import com.facebook.react.module.annotations.ReactModule
-import com.facebook.react.uimanager.LayoutShadowNode
-import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.EventDispatcher
-import com.facebook.yoga.YogaMeasureFunction
-import com.facebook.yoga.YogaMeasureMode
-import com.facebook.yoga.YogaMeasureOutput
-import com.facebook.yoga.YogaNode
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.uimanager.UIManagerModule
+import com.facebook.react.uimanager.ViewGroupManager
+import com.rcttabview.events.OnNativeLayoutEvent
+import com.rcttabview.events.PageSelectedEvent
+import com.rcttabview.events.TabLongPressEvent
 
 @ReactModule(name = RCTTabViewImpl.NAME)
-class RCTTabViewManager(context: ReactApplicationContext) : SimpleViewManager<ReactBottomNavigationView>() {
+class RCTTabViewManager(context: ReactApplicationContext) : ViewGroupManager<ReactBottomNavigationView>() {
   private lateinit var eventDispatcher: EventDispatcher
   private var tabViewImpl = RCTTabViewImpl()
 
@@ -34,11 +32,35 @@ class RCTTabViewManager(context: ReactApplicationContext) : SimpleViewManager<Re
     view.onTabLongPressedListener = { key ->
       eventDispatcher.dispatchEvent(TabLongPressEvent(viewTag = view.id, key))
     }
+
+    view.onNativeLayoutListener = { width, height ->
+      eventDispatcher.dispatchEvent(OnNativeLayoutEvent(viewTag = view.id, width, height))
+    }
     return view
   }
 
-  override fun createShadowNodeInstance(): LayoutShadowNode {
-    return TabViewShadowNode()
+  override fun getChildCount(parent: ReactBottomNavigationView): Int {
+    return tabViewImpl.getChildCount(parent)
+  }
+
+  override fun getChildAt(parent: ReactBottomNavigationView, index: Int): View? {
+    return tabViewImpl.getChildAt(parent, index)
+  }
+
+  override fun removeView(parent: ReactBottomNavigationView, view: View) {
+    tabViewImpl.removeView(parent, view)
+  }
+
+  override fun removeAllViews(parent: ReactBottomNavigationView) {
+    tabViewImpl.removeAllViews(parent)
+  }
+
+  override fun removeViewAt(parent: ReactBottomNavigationView, index: Int) {
+    tabViewImpl.removeViewAt(parent, index)
+  }
+
+  override fun needsCustomLayoutForChildren(): Boolean {
+    return tabViewImpl.needsCustomLayoutForChildren()
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any>? {
@@ -54,7 +76,6 @@ class RCTTabViewManager(context: ReactApplicationContext) : SimpleViewManager<Re
   fun setSelectedPage(view: ReactBottomNavigationView, key: String) {
     tabViewImpl.setSelectedPage(view, key)
   }
-
 
   @ReactProp(name = "labeled")
   fun setLabeled(view: ReactBottomNavigationView, flag: Boolean?) {
@@ -91,18 +112,18 @@ class RCTTabViewManager(context: ReactApplicationContext) : SimpleViewManager<Re
     tabViewImpl.setActiveIndicatorColor(view, color)
   }
 
-  // iOS Props
+  @ReactProp(name = "disablePageAnimations")
+  fun setDisablePageAnimations(view: ReactBottomNavigationView, flag: Boolean) {
+    view.disablePageAnimations = flag
+  }
 
+  // iOS Props
   @ReactProp(name = "sidebarAdaptable")
   fun setSidebarAdaptable(view: ReactBottomNavigationView, flag: Boolean) {
   }
 
   @ReactProp(name = "ignoresTopSafeArea")
   fun setIgnoresTopSafeArea(view: ReactBottomNavigationView, flag: Boolean) {
-  }
-
-  @ReactProp(name = "disablePageAnimations")
-  fun setDisablePageAnimations(view: ReactBottomNavigationView, flag: Boolean) {
   }
 
   @ReactProp(name = "hapticFeedbackEnabled")
@@ -123,43 +144,5 @@ class RCTTabViewManager(context: ReactApplicationContext) : SimpleViewManager<Re
   @ReactProp(name = "fontSize")
   fun setFontSize(view: ReactBottomNavigationView?, value: Int) {
     view?.setFontSize(value)
-  }
-
-  class TabViewShadowNode() : LayoutShadowNode(),
-    YogaMeasureFunction {
-    private var mWidth = 0
-    private var mHeight = 0
-    private var mMeasured = false
-
-    init {
-      initMeasureFunction()
-    }
-
-    private fun initMeasureFunction() {
-      setMeasureFunction(this)
-    }
-
-    override fun measure(
-      node: YogaNode,
-      width: Float,
-      widthMode: YogaMeasureMode,
-      height: Float,
-      heightMode: YogaMeasureMode
-    ): Long {
-      if (mMeasured) {
-        return YogaMeasureOutput.make(mWidth, mHeight)
-      }
-      val tabView = ReactBottomNavigationView(themedContext)
-      val spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-
-      val navigationBarInset = RCTTabViewImpl.getNavigationBarInset(themedContext)
-      tabView.measure(spec, spec)
-      // TabBar should always stretch to the width of the screen.
-      this.mWidth = width.toInt()
-      this.mHeight = tabView.measuredHeight + navigationBarInset
-      this.mMeasured = true
-
-      return YogaMeasureOutput.make(mWidth, mHeight)
-    }
   }
 }
