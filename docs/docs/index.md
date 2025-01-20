@@ -10,7 +10,7 @@ hero:
       link: /docs/getting-started/quick-start
     - theme: alt
       text: GitHub
-      link: https://github.com/okwasniewski/react-native-bottom-tabs
+      link: https://github.com/callstackincubator/react-native-bottom-tabs
 features:
   - title: Native Platform Primitives
     details: Bottom Tabs that use native platform primitives (SwiftUI's TabView on iOS and BottomNavigationView on Android).
