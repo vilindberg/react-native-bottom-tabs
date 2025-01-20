@@ -15,7 +15,7 @@
 
 </div>
 
-https://github.com/user-attachments/assets/fbdd9ce2-f4b9-4d0c-bd91-2e62bb422d69
+https://github.com/user-attachments/assets/31234109-187f-4cf4-ab40-a975b4469157
 
 ## Supported Platforms
 
