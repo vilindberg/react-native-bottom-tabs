@@ -11,13 +11,11 @@
   "linked": [],
   "access": "public",
   "baseBranch": "main",
-  "updateInternalDependencies": "patch",
   "ignore": [
     "react-native-bottom-tabs-docs",
     "react-native-bottom-tabs-example",
     "example-expo"
   ],
-  "bumpVersionsWithWorkspaceProtocolOnly": true,
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true,
     "updateInternalDependents": "always"
