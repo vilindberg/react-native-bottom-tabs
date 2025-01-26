@@ -10,6 +10,10 @@
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/callstackincubator/react-native-bottom-tabs.git"
+  },
   "jest": {
     "preset": "jest-expo"
   },
