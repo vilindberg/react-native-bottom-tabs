@@ -19,7 +19,7 @@
     "build:macos": "turbo run build:macos",
     "build:ios-expo": "turbo run build:ios-expo",
     "build:android-expo": "turbo run build:android-expo",
-    "version-packages": "changeset version && yarn install",
+    "version-packages": "changeset version && yarn install --no-immutable",
     "publish-packages": "turbo run build lint && changeset version && changeset publish"
   },
   "resolutions": {
