@@ -24,6 +24,7 @@ jobs:
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
+          registry-url: 'https://registry.npmjs.org'
           node-version: 20
 
       - name: Install Dependencies
@@ -31,7 +32,8 @@ jobs:
 
       - name: Release
         run: |
-          yarn changeset version --snapshot canary
+          yarn changeset version --snapshot canary && yarn install --no-immutable
+          yarn build
           yarn changeset publish --tag canary --no-git-tag --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
