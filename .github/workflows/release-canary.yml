@@ -11,6 +11,7 @@ jobs:
       contents: write # to create release (changesets/action)
       id-token: write # Required for provenance
       issues: write # To create a comment
+      pull-requests: write
     name: Release
     runs-on: ubuntu-latest
     steps:
