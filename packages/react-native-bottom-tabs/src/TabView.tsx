@@ -175,6 +175,8 @@ const TabView = <Route extends BaseRoute>({
   getActiveTintColor = ({ route }: { route: Route }) => route.activeTintColor,
   getTestID = ({ route }: { route: Route }) => route.testID,
   hapticFeedbackEnabled = false,
+  // Android's native behavior is to show labels when there are less than 4 tabs. We leave it as undefined to use the platform default behavior.
+  labeled = Platform.OS !== 'android' ? true : undefined,
   tabBar: renderCustomTabBar,
   tabBarStyle,
   tabLabelStyle,
@@ -300,6 +302,7 @@ const TabView = <Route extends BaseRoute>({
         inactiveTintColor={inactiveTintColor}
         barTintColor={tabBarStyle?.backgroundColor}
         rippleColor={rippleColor}
+        labeled={labeled}
       >
         {trimmedRoutes.map((route) => {
           if (getLazy({ route }) !== false && !loaded.includes(route.key)) {

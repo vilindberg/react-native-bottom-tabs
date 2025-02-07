@@ -66,6 +66,10 @@ const FourTabsActiveIndicatorColor = () => {
   return <FourTabs activeIndicatorColor={'#87CEEB'} />;
 };
 
+const UnlabeledTabs = () => {
+  return <LabeledTabs showLabels={false} />;
+};
+
 const examples = [
   {
     component: ThreeTabs,
@@ -77,7 +81,8 @@ const examples = [
     name: 'SF Symbols',
     screenOptions: { headerShown: false },
   },
-  { component: LabeledTabs, name: 'Labeled Tabs', platform: 'android' },
+  { component: LabeledTabs, name: 'Labeled Tabs' },
+  { component: UnlabeledTabs, name: 'Unlabeled Tabs' },
   {
     component: NativeBottomTabsEmbeddedStacks,
     name: 'Embedded stacks',

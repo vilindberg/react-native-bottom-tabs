@@ -79,7 +79,7 @@ public final class TabInfo: NSObject {
     }
   }
 
-  @objc public var labeled: Bool = true {
+  @objc public var labeled: Bool = false {
     didSet {
       props.labeled = labeled
     }

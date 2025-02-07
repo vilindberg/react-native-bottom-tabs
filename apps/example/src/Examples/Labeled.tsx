@@ -5,7 +5,11 @@ import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 
-export default function LabeledTabs() {
+export default function LabeledTabs({
+  showLabels = true,
+}: {
+  showLabels: boolean;
+}) {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {
@@ -41,7 +45,7 @@ export default function LabeledTabs() {
 
   return (
     <TabView
-      labeled
+      labeled={showLabels}
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}

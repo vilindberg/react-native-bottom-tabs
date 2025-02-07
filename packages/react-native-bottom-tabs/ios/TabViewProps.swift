@@ -9,7 +9,7 @@ class TabViewProps: ObservableObject {
   @Published var selectedPage: String?
   @Published var icons: [Int: PlatformImage] = [:]
   @Published var sidebarAdaptable: Bool?
-  @Published var labeled: Bool?
+  @Published var labeled: Bool = false
   @Published var scrollEdgeAppearance: String?
   @Published var barTintColor: PlatformColor?
   @Published var activeTintColor: PlatformColor?
