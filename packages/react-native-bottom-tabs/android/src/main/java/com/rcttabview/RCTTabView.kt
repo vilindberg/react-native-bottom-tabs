@@ -384,6 +384,10 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     updateTextAppearance()
   }
 
+  fun onDropViewInstance() {
+    imageLoader.shutdown()
+  }
+
   private fun updateTextAppearance() {
     if (fontSize != null || fontFamily != null || fontWeight != null) {
       val menuView = bottomNavigation.getChildAt(0) as? ViewGroup ?: return
@@ -454,10 +458,5 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     addView(bottomNavigation)
     updateItems(items)
     uiModeConfiguration = newConfig?.uiMode ?: uiModeConfiguration
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    imageLoader.shutdown()
   }
 }

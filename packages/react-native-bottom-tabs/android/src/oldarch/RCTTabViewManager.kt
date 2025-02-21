@@ -39,6 +39,11 @@ class RCTTabViewManager(context: ReactApplicationContext) : ViewGroupManager<Rea
     return view
   }
 
+  override fun onDropViewInstance(view: ReactBottomNavigationView) {
+    super.onDropViewInstance(view)
+    view.onDropViewInstance()
+  }
+
   override fun getChildCount(parent: ReactBottomNavigationView): Int {
     return tabViewImpl.getChildCount(parent)
   }
