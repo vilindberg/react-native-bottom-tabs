@@ -86,9 +86,7 @@ struct TabViewImpl: View {
       let icon = props.icons[index]
 
       RepresentableView(view: child)
-        .ignoresTopSafeArea(
-          props.ignoresTopSafeArea
-        )
+        .ignoresSafeArea(.container, edges: .all)
         .tabItem {
           TabItem(
             title: tabData?.title,
@@ -134,7 +132,7 @@ struct TabViewImpl: View {
 #if !os(macOS)
 private func updateTabBarAppearance(props: TabViewProps, tabBar: UITabBar?) {
   guard let tabBar else { return }
-  
+
   tabBar.isHidden = props.tabBarHidden
 
   if props.scrollEdgeAppearance == "transparent" {
@@ -290,19 +288,6 @@ extension View {
     }
   }
 
-  @ViewBuilder
-  func ignoresTopSafeArea(
-    _ flag: Bool
-  ) -> some View {
-    if flag {
-      self
-        .ignoresSafeArea(.container, edges: .vertical)
-    } else {
-      self
-        .ignoresSafeArea(.container, edges: .bottom)
-    }
-  }
-
 #if !os(macOS)
   @ViewBuilder
   func configureAppearance(props: TabViewProps, tabBar: UITabBar?) -> some View {
@@ -350,7 +335,7 @@ extension View {
       self
     }
   }
- 
+
   @ViewBuilder
   func hideTabBar(_ flag: Bool) -> some View {
 #if !os(macOS)
