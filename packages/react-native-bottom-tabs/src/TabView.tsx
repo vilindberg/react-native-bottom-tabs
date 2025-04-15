@@ -162,7 +162,7 @@ interface Props<Route extends BaseRoute> {
   };
 }
 
-const ANDROID_MAX_TABS = 6;
+const ANDROID_MAX_TABS = 100;
 
 const TabView = <Route extends BaseRoute>({
   navigationState,

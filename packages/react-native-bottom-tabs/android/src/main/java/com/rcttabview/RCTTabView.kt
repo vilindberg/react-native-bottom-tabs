@@ -34,8 +34,14 @@ import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
 import com.google.android.material.transition.platform.MaterialFadeThrough
 
+class ExtendedBottomNavigationView(context: Context) : BottomNavigationView(context) {
+  override fun getMaxItemCount(): Int {
+    return 100
+  }
+}
+
 class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
-  private var bottomNavigation = BottomNavigationView(context)
+  private var bottomNavigation = ExtendedBottomNavigationView(context)
   val layoutHolder = FrameLayout(context)
 
   var onTabSelectedListener: ((key: String) -> Unit)? = null
@@ -456,7 +462,7 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     // React Native opts out ouf Activity re-creation when configuration changes, this workarounds that.
     // We also opt-out of this recreation when custom styles are used.
     removeView(bottomNavigation)
-    bottomNavigation = BottomNavigationView(context)
+    bottomNavigation = ExtendedBottomNavigationView(context)
     addView(bottomNavigation)
     updateItems(items)
     setLabeled(this.labeled)
