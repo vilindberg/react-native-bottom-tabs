@@ -1,4 +1,4 @@
-<a href="https://www.callstack.com/open-source" align="center">
+<a href="https://www.callstack.com/open-source?utm_campaign=generic&utm_source=github&utm_medium=referral&utm_content=react-native-bottom-tabs" align="center">
   <picture>
     <img alt="React Native Bottom Tabs" src="https://github.com/user-attachments/assets/bbd9632c-4df1-450b-832b-3e03280f3ce7">
   </picture>
