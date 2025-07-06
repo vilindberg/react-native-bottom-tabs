@@ -28,6 +28,7 @@ struct TabViewImpl: View {
         onLayout(size)
       }
     }
+    .tabBarMinimizeBehavior(props.minimizeBehavior)
 #if !os(tvOS) && !os(macOS) && !os(visionOS)
     .onTabItemEvent { index, isLongPress in
       let item = props.filteredItems[safe: index]
@@ -331,6 +332,23 @@ extension View {
     } else {
       self
     }
+  }
+
+  @ViewBuilder
+  func tabBarMinimizeBehavior(_ behavior: MinimizeBehavior?) -> some View {
+#if compiler(>=6.2)
+    if #available(iOS 26.0, *) {
+      if let behavior {
+        self.tabBarMinimizeBehavior(behavior.convert())
+      } else {
+        self
+      }
+    } else {
+      self
+    }
+#else
+    self
+#endif
   }
 
   @ViewBuilder
