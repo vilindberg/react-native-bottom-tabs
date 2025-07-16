@@ -134,6 +134,11 @@ interface Props<Route extends BaseRoute> {
    */
   getFreezeOnBlur?: (props: { route: Route }) => boolean | undefined;
 
+  /**
+   * Optional accessory view to render above the tab bar on iOS 18+.
+   */
+  accessory?: React.ReactNode;
+
   tabBarStyle?: {
     /**
      * Background color of the tab bar.
@@ -197,6 +202,7 @@ const TabView = <Route extends BaseRoute>({
   tabBar: renderCustomTabBar,
   tabBarStyle,
   tabLabelStyle,
+  accessory,
   ...props
 }: Props<Route>) => {
   // @ts-ignore
@@ -389,6 +395,7 @@ const TabView = <Route extends BaseRoute>({
             </View>
           );
         })}
+        {Platform.OS === 'ios' ? accessory : null}
       </NativeTabView>
       {renderCustomTabBar ? (
         <View ref={customTabBarWrapperRef}>{renderCustomTabBar()}</View>

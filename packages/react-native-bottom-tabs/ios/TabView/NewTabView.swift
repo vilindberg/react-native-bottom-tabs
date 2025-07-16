@@ -10,7 +10,7 @@ struct NewTabView: AnyTabView {
 
   @ViewBuilder
   var body: some View {
-    TabView(selection: $props.selectedPage) {
+    let base = TabView(selection: $props.selectedPage) {
       ForEach(props.children.indices, id: \.self) { index in
         if let tabData = props.items[safe: index] {
           let isFocused = props.selectedPage == tabData.key
@@ -50,5 +50,17 @@ struct NewTabView: AnyTabView {
       onLayout(size)
     }
     .hideTabBar(props.tabBarHidden)
+
+    if #available(iOS 26.0, *),
+      props.children.count > props.items.count,
+      let accessory = props.children[safe: props.items.count]
+    {
+      base.tabViewBottomAccessory {
+        RepresentableView(view: accessory)
+          .ignoresSafeArea()
+      }
+    } else {
+      base
+    }
   }
 }

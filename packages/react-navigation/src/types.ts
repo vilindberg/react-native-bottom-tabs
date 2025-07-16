@@ -136,4 +136,8 @@ export type NativeBottomTabNavigationConfig = Partial<
   >
 > & {
   tabBar?: (props: BottomTabBarProps) => React.ReactNode;
+  /**
+   * Optional accessory view to render above the tab bar on iOS 18+.
+   */
+  accessory?: React.ReactNode;
 };

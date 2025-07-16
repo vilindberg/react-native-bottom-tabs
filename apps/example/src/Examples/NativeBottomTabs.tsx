@@ -3,7 +3,7 @@ import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
-import { Platform } from 'react-native';
+import { Platform, View, Text } from 'react-native';
 import { useState } from 'react';
 
 const Tab = createNativeBottomTabNavigator();
@@ -33,6 +33,18 @@ function NativeBottomTabs() {
           );
         },
       }}
+      minimizeBehavior="onScrollDown"
+      accessory={
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 48,
+          }}
+        >
+          <Text>Hello</Text>
+        </View>
+      }
     >
       <Tab.Screen
         name="Article"
